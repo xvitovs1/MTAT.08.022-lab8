@@ -12,7 +12,7 @@ start() ->
 
 auth(Host, Port) ->
   {ok, Socket} = gen_tcp:connect(Host, Port, [binary, {packet,4}]),
-  send(Socket, {login,"Oleg"}),
+  send(Socket, {login,"user"}),
   process(Socket).
 
 process(Socket) ->
@@ -22,7 +22,7 @@ process(Socket) ->
       Msg = decode(Bin),
       case Msg of
         {params, Salt} ->
-          Digest = crypto:hash(sha, Salt++"mypassword"),
+          Digest = crypto:hash(sha, Salt++"password"),
           send(Socket, {auth, Digest}),
           process(Socket);
         {result, Success, Error} ->

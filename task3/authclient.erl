@@ -13,7 +13,7 @@ start() ->
 auth(Host, Port) ->
   case gen_tcp:connect(Host, Port, [binary, {packet,4}]) of
     {ok, Socket} ->
-      send(Socket, {login,"Oleg"}),
+      send(Socket, {login,"user"}),
       process(Socket);
     {error, Reason} ->
       io:format("Error connecting to server: ~s~n",[Reason]),
@@ -31,7 +31,7 @@ process(Socket) ->
             0 -> exit(1);
             _Else -> true
           end,
-          Digest = crypto:hash(sha, Salt++"mypassword"),
+          Digest = crypto:hash(sha, Salt++"password"),
           send(Socket, {auth, Digest}),
           process(Socket);
         {result, Success, Error} ->
